@@ -1,0 +1,26 @@
+server:
+  port: 8764
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://user:123456@localhost:8761/eureka/
+  insnceta:
+    prefer-ip-address: true
+
+spring:
+  application:
+    name: springcloudstudent
+  thymeleaf:
+    cache: false
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://127.0.0.1:3306/gnus?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT
+  jpa:
+    database: mysql
+    show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+

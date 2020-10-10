@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>学生详情页面</title>
+</head>
+<body>
+       <h2>学生信息页面</h2>
+       <div>
+           <form action="/stuController/updateStu" method="post">
+               <input type="hidden" name="stuId" th:value="${map.get('stuId')}">
+               学生姓名:<input type="text" name="stuName" th:value="${map.get('stuName')}" > <br>
+               学生班级:<input type="text" name="claName" th:value="${map.get('stuClaName')}"><br>
+               <input type="submit" value="修改">
+           </form>
+       </div>
+</body>
+</html>

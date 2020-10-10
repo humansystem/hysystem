@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <base th:href="|${#request.getContextPath()}|">
+    <meta charset="UTF-8">
+    <title>学生信息页面</title>
+</head>
+<body>
+<h1 align="center">学生信息页面</h1>
+<div align="center">
+    <a th:href="@{/stuController/add}">去新加</a>
+    <form th:action="@{/stuController/queryByPage}" method="post">
+       <!-- 文章标题:<input type="text" name="articleTitle" th:value="${#request.getParameter('articleTitle')}">
+        文章内容:<input type="text" name="articleContent" th:value="${#request.getParameter('articleContent')}">
+        <input type="submit" value="查询">-->
+
+    <table border="1">
+        <tr>
+            <td>序号</td>
+            <td>学生编号</td>
+            <td>学生姓名</td>
+            <td>班级编号</td>
+            <td>班级名称</td>
+        </tr>
+        <tr th:each="stu,at : ${pageInfo.content}">
+            <td th:text="${at.count}"></td>
+            <td th:text="${stu.stuId}"></td>
+            <td th:text="${stu.stuName}"></td>
+            <td th:text="${stu.stuClaNum}"></td>
+            <td><a th:href="|/stuController/getOneStu/${stu.stuId}|">编辑</a>&nbsp;<a th:href="|/stuController/delete/${stu.stuId}|" onclick= "return confirm('确认删除吗！')">删除</a></td>
+        </tr>
+    </table>
+        总记录条数:<span th:text="${pageInfo.totalElements}"></span>
+        每页显示:<select name="size" onchange="this.form.submit()">
+        <option value="5">5</option>
+        <option value="10" th:selected="${pageInfo.size} == 10">10</option>
+        <option value="15" th:selected="${pageInfo.size} == 15">15</option>
+        <option value="20" th:selected="${pageInfo.size} == 20">20</option>
+    </select>
+        总页数:<span th:text="${pageInfo.totalPages}"></span>
+        <button onclick="toPage(0)" th:disabled="${pageInfo.first}">首页</button>
+        <button th:onclick="|toPage(${pageInfo.number}-1)|" th:disabled="${pageInfo.first}">上一页</button>
+        当前页:<input size="3"  th:value="${pageInfo.number}+1" onchange="topPage(this.value-1)">
+        <input type="hidden" id="pageNum" name="page" th:value="${pageInfo.number}">
+        <button th:onclick="|toPage(${pageInfo.number}+1)|" th:disabled="${pageInfo.last}">下一页</button>
+        <button th:onclick="|toPage(${pageInfo.totalPages}-1)|" th:disabled="${pageInfo.last} ">末页</button>
+
+        <script>
+            function toPage(num){
+                document.getElementById("pageNum").value=num;
+                document.forms[0].submit();
+            }
+        </script></form>
+</div>
+</body>
+</html>

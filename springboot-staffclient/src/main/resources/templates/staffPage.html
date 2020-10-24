@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>员工信息页面</title>
+</head>
+<body>
+        <div>
+            <a th:href="@{/staffController/toAddStaff}">去新加</a>
+            <form th:action="@{/staffController/getAllStaff}" method="post">
+                <!-- 文章标题:<input type="text" name="articleTitle" th:value="${#request.getParameter('articleTitle')}">
+                 文章内容:<input type="text" name="articleContent" th:value="${#request.getParameter('articleContent')}">
+                 <input type="submit" value="查询">-->
+
+                <table border="1">
+                <tr>
+                    <th>员工ID</th>
+                    <th>员工编号</th>
+                    <th>员工姓名</th>
+                    <th>所在部门</th>
+                    <th>学历</th>
+                    <th>专业</th>
+                    <th>薪资</th>
+                    <th>户籍</th>
+                    <th>照片</th>
+                    <th>现居地</th>
+                    <th>身份证号</th>
+                    <th>电话号码</th>
+                    <th>操作</th>
+                </tr>
+                <tr th:each="staff:${pageInfo.content}">
+                    <td th:text="${staff.staffId}"></td>
+                    <td th:text="${staff.staffNum}"></td>
+                    <td th:text="${staff.staffName}"></td>
+                    <td th:text="${staff.deptId}"></td>
+                    <td th:text="${staff.eduBackground}"></td>
+                    <td th:text="${staff.major}"></td>
+                    <td th:text="${staff.salary}"></td>
+                    <td th:text="${staff.nativePlace}"></td>
+                    <td>
+                        <img th:src="${staff.picture}">
+                    </td>
+                    <td th:text="${staff.nowAddress}"></td>
+                    <td th:text="${staff.idcardNo}"></td>
+                    <td th:text="${staff.phone}"></td>
+                    <td><a th:href="|/staffController/getStaffDetail/${staffId}|">编辑</a>
+                        <a th:href="|/staffController/delStaff/${staff.staffId}|" onclick="return confirm('确认删除吗!')">删除</a></td>
+                </tr>
+            </table>
+            总记录条数:<span th:text="${pageInfo.totalElements}"></span>
+            每页显示:<select name="size" onchange="this.form.submit()">
+            <option value="5">5</option>
+            <option value="10" th:selected="${pageInfo.size} == 10">10</option>
+            <option value="15" th:selected="${pageInfo.size} == 15">15</option>
+            <option value="20" th:selected="${pageInfo.size} == 20">20</option>
+        </select>
+            总页数:<span th:text="${pageInfo.totalPages}"></span>
+            <button onclick="toPage(0)" th:disabled="${pageInfo.first}">首页</button>
+            <button th:onclick="|toPage(${pageInfo.number}-1)|" th:disabled="${pageInfo.first}">上一页</button>
+            当前页:<input size="3"  th:value="${pageInfo.number}+1" onchange="topPage(this.value-1)">
+            <input type="hidden" id="pageNum" name="page" th:value="${pageInfo.number}">
+            <button th:onclick="|toPage(${pageInfo.number}+1)|" th:disabled="${pageInfo.last}">下一页</button>
+            <button th:onclick="|toPage(${pageInfo.totalPages}-1)|" th:disabled="${pageInfo.last} ">末页</button>
+
+            <script>
+                function toPage(num){
+                    document.getElementById("pageNum").value=num;
+                    document.forms[0].submit();
+                }
+            </script></form>
+        </div>
+
+</body>
+</html>

@@ -5,12 +5,13 @@
     <title>添加员工信息</title>
 </head>
 <body>
-        <form th:action="@{/staffController/addStaff}" method="post" enctype="multipart/form-data">
+       <div align="center">
+        <form action="/staffController/addStaff" method="post">
             员工姓名:&nbsp;<input type="text" name="staffName"  ><br><br>
             员工学历:&nbsp;<input type="text" name="eduBackground"  ><br><br>
             员工专业:&nbsp;<input type="text" name="major"><br><br>
             员工照片:&nbsp;<input type="file" name="mf"><br><br>
             <input type="submit" value="添加"/>
-        </form>
+        </form></div>
 </body>
 </html>

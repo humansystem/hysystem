@@ -9,10 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -60,12 +57,38 @@ public class StaffController {
         return page;
     }
 
-    @RequestMapping("/addStaff/{staff}")
-    public void addStaff(MultipartFile mf, @PathVariable("staff") Staff staff, HttpSession session){   //添加员工信息
+    @RequestMapping("/addStaff")
+    public ModelAndView addStaff(MultipartFile mf , HttpSession session,
+                                 @RequestParam("staffNum") String staffNum,
+                                 @RequestParam("staffName") String staffName,
+                                 @RequestParam("deptId") Integer deptId,
+                                 @RequestParam("position") Integer position,
+                                 @RequestParam("eduBackground") String eduBackground,
+                                 @RequestParam("major") String major,
+                                 @RequestParam("salary") Integer salary,
+                                 @RequestParam("nativePlace") String nativePlace,
+                                 @RequestParam("nowAddress") String nowAddress,
+                                 @RequestParam("idcardNo") String idcardNo,
+                                 @RequestParam("phone") String phone,
+                                 @RequestParam("workSeniority") String workSeniority,
+                                 @RequestParam("staffStatus") String staffStatus){   //添加员工信息
         DateTimeFormatter  dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        staff.setBirthday(LocalDateTime.now().format(dtf));
+        Staff staff = new Staff();
+        staff.setHiredate(LocalDateTime.now().format(dtf));
+        staff.setDeptId(deptId);
+        staff.setStaffNum(staffNum);
+        staff.setStaffName(staffName);
+        staff.setPosition(position);
+        staff.setEduBackground(eduBackground);
+        staff.setMajor(major);
+        staff.setSalary(salary);
+        staff.setNativePlace(nativePlace);
+        staff.setNowAddress(nowAddress);
+        staff.setIdcardNo(idcardNo);
+        staff.setPhone(phone);
+        staff.setWorkSeniority(workSeniority);
+        staff.setStaffStatus("在职");
         String fileName = UUID.randomUUID().toString()+".jpg";
-
         //文件保存路径
         String path = session.getServletContext().getRealPath("/")+"img/"+fileName;
         //文件保存的真实路径
@@ -77,15 +100,18 @@ public class StaffController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        System.out.println(staff);
             staff.setPicture(fileName);
             staffService.addStaff(staff);
-        }
+       }
+        ModelAndView mv = new ModelAndView(new InternalResourceView("/staffController/getAllStaff"));
+        return mv;
 
     }
     @RequestMapping("/toAddStaff")
     public String toAddStaff(HttpSession session){   //前往添加员工信息页面
-        Map<String,Object> map = restTemplate.getForObject("http://localhost:82/getDepartByStatus",Map.class);
-        session.setAttribute("departs",map);
+        //Map<String,Object> map = restTemplate.getForObject("http://localhost:82/getDepartByStatus",Map.class);
+        //session.setAttribute("departs",map);
         return "addStaff";
     }
 

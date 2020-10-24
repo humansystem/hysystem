@@ -2,10 +2,7 @@ package com.etc.entity;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "staff")
@@ -13,6 +10,7 @@ import javax.persistence.Table;
 public class Staff {
     @Id
     @Column(name = "staff_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer staffId;    //员工ID
     @Column(name = "dept_id")
     private Integer deptId;     //部门ID
@@ -28,8 +26,8 @@ public class Staff {
     private String major;        //专业
     @Column(name = "salary")
     private Integer salary;     //薪资
-    @Column(name = "birthday")
-    private String birthday;    //出生日期
+    @Column(name = "hiredate")
+    private String hiredate;    //出生日期
     @Column(name = "picture")
     private String picture;     //照片
     @Column(name = "native_place")
@@ -41,6 +39,13 @@ public class Staff {
     @Column(name = "phone")
     private String phone;       //电话号码
     @Column(name = "work_seniority")
-    private Integer workSeniority; //工作资历
+    private String workSeniority; //工作资历
+    @Column(name = "staffstatus")
+    private String staffStatus;  //员工状态
+
+    @OneToOne
+    private Job job;
+    @OneToOne
+    private Depart depart;
 
 }

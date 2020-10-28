@@ -1,5 +1,6 @@
 package com.etc;
 
+import com.etc.dao.StaffDao;
 import com.etc.entity.Staff;
 import com.etc.service.StaffService;
 import org.junit.jupiter.api.Test;
@@ -11,10 +12,14 @@ import javax.annotation.Resource;
 @SpringBootTest
 class SpringbootStaffclientApplicationTests {
     @Resource
-    StaffService staffService;
+    StaffDao staffDao;
     @Test
     void contextLoads() {
     }
 
+    @Test
+    void testGetDetail(){
+        System.out.println(staffDao.findAll());
+    }
 
 }

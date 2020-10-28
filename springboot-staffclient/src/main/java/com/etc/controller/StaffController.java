@@ -1,5 +1,6 @@
 package com.etc.controller;
 
+import com.etc.entity.Depart;
 import com.etc.entity.Staff;
 import com.etc.service.StaffService;
 import com.netflix.ribbon.proxy.annotation.Http;
@@ -24,8 +25,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-@Controller
+@RestController
 @RequestMapping("/staffController")
+@CrossOrigin("*")
 public class StaffController {
     @Resource
     StaffService staffService;
@@ -42,26 +44,55 @@ public class StaffController {
         return map;
     }
 
-    @RequestMapping("/getAllStaff")
-    public ModelAndView getAllStaff(@PageableDefault(value = 5,sort = {"staffId"},direction = Sort.Direction.DESC)Pageable pageable){
+    @RequestMapping("/getAllStaff")     //获取所有的数据
+    public Map<String,Object> getAllStaff(@PageableDefault(value = 5,sort = {"staff_id"},direction = Sort.Direction.DESC)Pageable pageable){
         Page<Staff> page = staffService.findAllStaff(pageable);
-        ModelAndView mv = new ModelAndView();
-        mv.addObject("pageInfo",page);
-        mv.setViewName("staffPage");
-        return mv;
+        Map<String,Object> map = new HashMap<>();
+        map.put("page",page);
+        return map;
     }
 
     @RequestMapping("/findStaffByDepartId/{departId}")    //查询某部门员工信息
-    public Page<Staff> findStaffByDepartId(@PageableDefault(value = 5,sort = {"staffId"},direction = Sort.Direction.DESC)Pageable pageable, @PathVariable("departId") Integer departId){
+    public Map<String,Object> findStaffByDepartId(@PageableDefault(value = 5,sort = {"staffId"},direction = Sort.Direction.DESC)Pageable pageable, @PathVariable("departId") Integer departId){
         Page<Staff> page = staffService.findStaffByDepartId(pageable,departId);
-        return page;
+        Map<String,Object> map = new HashMap<>();
+        map.put("page",page);
+        return map;
+    }
+
+    @RequestMapping(value = "/uploadImg")
+    public void uploadImg(MultipartFile file){
+        System.out.println("12344");
+        System.out.println(file);
+        DateTimeFormatter  dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        Staff staff = new Staff();
+        staff.setHiredate(LocalDateTime.now().format(dtf));
+        staff.setStaffStatus("在职");
+        String fileName = UUID.randomUUID().toString()+".jpg";
+        //文件保存路径
+        String path = "D://IdeaProjects//springboot-staffclient//src//main//resources//static//img"+fileName;
+        //文件保存的真实路径
+        //System.out.println(session.getServletContext().getRealPath("/"));
+        if (file != null&&file.getSize()!=0){
+            try{
+                //把文件按照path路径存储起来
+                file.transferTo(new java.io.File(path));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            staff.setPicture(fileName);
+            System.out.println(staff);
+            staffService.addStaff(staff);
+        }
+
     }
 
     @RequestMapping("/addStaff")
     public ModelAndView addStaff(MultipartFile mf , HttpSession session,
                                  @RequestParam("staffNum") String staffNum,
                                  @RequestParam("staffName") String staffName,
-                                 @RequestParam("deptId") Integer deptId,
+                                 @RequestParam("deptId") Depart deptId,
                                  @RequestParam("position") Integer position,
                                  @RequestParam("eduBackground") String eduBackground,
                                  @RequestParam("major") String major,
@@ -78,7 +109,7 @@ public class StaffController {
         staff.setDeptId(deptId);
         staff.setStaffNum(staffNum);
         staff.setStaffName(staffName);
-        staff.setPosition(position);
+        //staff.setPosition(position);
         staff.setEduBackground(eduBackground);
         staff.setMajor(major);
         staff.setSalary(salary);

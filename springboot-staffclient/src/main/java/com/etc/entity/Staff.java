@@ -12,14 +12,18 @@ public class Staff {
     @Column(name = "staff_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer staffId;    //员工ID
-    @Column(name = "dept_id")
-    private Integer deptId;     //部门ID
+    @JoinColumn(name = "dept_id")
+    @OneToOne
+    private Depart deptId;     //部门ID
     @Column(name = "staff_num")
     private String staffNum;    //员工编号
     @Column(name = "staff_name")
     private String staffName;   //员工姓名
-    @Column(name = "position")
-    private Integer position;   //职位
+
+    @JoinColumn(name = "job_id")
+    @OneToOne
+    private Job job;   //职位
+
     @Column(name = "edu_background")
     private String  eduBackground; //学历
     @Column(name = "major")
@@ -42,10 +46,4 @@ public class Staff {
     private String workSeniority; //工作资历
     @Column(name = "staffstatus")
     private String staffStatus;  //员工状态
-
-    @OneToOne
-    private Job job;
-    @OneToOne
-    private Depart depart;
-
 }
